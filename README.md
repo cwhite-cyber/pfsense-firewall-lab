@@ -10,8 +10,8 @@ Monitoring (LibreNMS) tells you what's happening on the network. A SIEM (Graylog
 
 ## Goals
 
-* \[ ] Stand up pfSense as a two-NIC gateway (WAN via NAT, LAN via host-only)
-* \[ ] Segment existing lab VMs behind the LAN interface
+* \[x] Stand up pfSense as a two-NIC gateway (WAN via NAT, LAN via host-only)
+* \[x] Segment existing lab VMs behind the LAN interface
 * \[ ] Implement default-deny inbound rules; allow only explicitly needed services
 * \[ ] Forward pfSense logs to Graylog (`graylog01`)
 * \[ ] (Stretch) Add Suricata/Snort for IDS/IPS on the WAN interface
@@ -32,16 +32,17 @@ Monitoring (LibreNMS) tells you what's happening on the network. A SIEM (Graylog
 
 ## Build log
 
-| Date | Phase | Notes |
-|---|---|---|
-| 2026-07-10 | VM creation + pfSense install | Created pfsense-fw VM (2GB RAM, 2 CPU). Hit and resolved several install-time errors (see troubleshooting.md). |
-| 2026-07-10 | Interface assignment (WAN/LAN) | WAN=em0 (DHCP via VirtualBox NAT), LAN=em1 (static). |
-| 2026-07-10 | LAN static IP + DHCP server | LAN set to 192.168.56.2/24 after resolving IP conflict with host. DHCP range 192.168.56.100-199. |
-| 2026-07-10 | GUI access + admin password reset | Confirmed HTTPS web GUI access, changed default admin password. |
-| 2026-07-10 | End-to-end connectivity test | theone (192.168.56.102) routed through pfSense to 8.8.8.8 and google.com, 0% packet loss, DNS resolving correctly. |
-| | Inbound rule policy (default-deny) | |
-| | Graylog log forwarding | |
-| | IDS/IPS package (stretch) | |
+|Date|Phase|Notes|
+|-|-|-|
+|2026-07-10|VM creation + pfSense install|Created pfsense-fw VM (2GB RAM, 2 CPU). Hit and resolved several install-time errors (see troubleshooting.md).|
+|2026-07-10|Interface assignment (WAN/LAN)|WAN=em0 (DHCP via VirtualBox NAT), LAN=em1 (static).|
+|2026-07-10|LAN static IP + DHCP server|LAN set to 192.168.56.2/24 after resolving IP conflict with host. DHCP range 192.168.56.100-199.|
+|2026-07-10|GUI access + admin password reset|Confirmed HTTPS web GUI access, changed default admin password.|
+|2026-07-10|End-to-end connectivity test|theone (192.168.56.102) routed through pfSense to 8.8.8.8 and google.com, 0% packet loss, DNS resolving correctly.|
+|2026-07-10|Kali connectivity verification | Confirmed Kali (192.168.56.x) routes through pfSense: gateway ping 0% loss, 8.8.8.8 0% loss, DNS resolution via google.com confirmed. |
+||Inbound rule policy (default-deny)||
+||Graylog log forwarding||
+||IDS/IPS package (stretch)||
 
 ## Troubleshooting
 
