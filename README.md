@@ -46,6 +46,26 @@ Monitoring (LibreNMS) tells you what's happening on the network. A SIEM (Graylog
 ||Graylog log forwarding||
 ||IDS/IPS package (stretch)||
 
+## Proof of Segmentation
+
+**pfSense web GUI, logged in and configured:**
+![pfSense Dashboard](screenshots/pfSense_Dashboard.png)
+
+**Terminal and web GUI shown side-by-side, confirming the LAN IP conflict fix and successful login:**
+![Terminal and pfSense login side-by-side](screenshots/pfSense_login.png)
+
+**Kali restricted to SSH-only access — ping and internet access blocked, only theone SSH allowed:**
+![Kali ping blocked, SSH-only access verified](screenshots/pfSense_Kali_ping.png)
+
+**LAN interface configuration in the pfSense console:**
+![LAN configuration in pfSense terminal](screenshots/pfSense_LAN_config.png)
+
+**Diagnosing and resolving an IP conflict between pfSense LAN and the host machine:**
+![IP conflict diagnosis](screenshots/pfSense_IP_conflict.png)
+
+**Early troubleshooting — CPU long mode error during initial VM setup:**
+![CPU long mode error](screenshots/pfSense_longmode_error.png)
+
 ## Troubleshooting
 
 ### "No route to host" during rule verification
