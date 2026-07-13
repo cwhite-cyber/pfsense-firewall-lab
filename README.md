@@ -12,7 +12,7 @@ Monitoring (LibreNMS) tells you what's happening on the network. A SIEM (Graylog
 
 * \[x] Stand up pfSense as a two-NIC gateway (WAN via NAT, LAN via host-only)
 * \[x] Segment existing lab VMs behind the LAN interface
-* \[ ] Implement default-deny inbound rules; allow only explicitly needed services
+* \[x] Implement default-deny inbound rules; allow only explicitly needed services
 * \[ ] Forward pfSense logs to Graylog (`graylog01`)
 * \[ ] (Stretch) Add Suricata/Snort for IDS/IPS on the WAN interface
 * \[ ] Diagram the full lab architecture with pfSense as the segmentation point
@@ -34,17 +34,36 @@ Monitoring (LibreNMS) tells you what's happening on the network. A SIEM (Graylog
 
 |Date|Phase|Notes|
 |-|-|-|
+| 2026-07-12 | Firewall rule policy (default-deny) | Added explicit allow rule: Kali (192.168.56.103) -> theone (192.168.56.102) TCP/22 only. Disabled default "allow LAN to any" rules (IPv4 + IPv6), relying on pfSense's implicit deny for everything else. |
+| 2026-07-12 | Rule verification | Confirmed SSH from Kali to theone succeeds (explicit allow). Confirmed ping from Kali to theone fails, and Kali loses all internet access (implicit deny catching everything not explicitly permitted). Verified via firewall logs showing "Default deny rule" entries. |
 |2026-07-10|VM creation + pfSense install|Created pfsense-fw VM (2GB RAM, 2 CPU). Hit and resolved several install-time errors (see troubleshooting.md).|
 |2026-07-10|Interface assignment (WAN/LAN)|WAN=em0 (DHCP via VirtualBox NAT), LAN=em1 (static).|
 |2026-07-10|LAN static IP + DHCP server|LAN set to 192.168.56.2/24 after resolving IP conflict with host. DHCP range 192.168.56.100-199.|
 |2026-07-10|GUI access + admin password reset|Confirmed HTTPS web GUI access, changed default admin password.|
 |2026-07-10|End-to-end connectivity test|theone (192.168.56.102) routed through pfSense to 8.8.8.8 and google.com, 0% packet loss, DNS resolving correctly.|
-|2026-07-10|Kali connectivity verification | Confirmed Kali (192.168.56.x) routes through pfSense: gateway ping 0% loss, 8.8.8.8 0% loss, DNS resolution via google.com confirmed. |
+|2026-07-10|Kali connectivity verification|Confirmed Kali (192.168.56.x) routes through pfSense: gateway ping 0% loss, 8.8.8.8 0% loss, DNS resolution via google.com confirmed.|
 ||Inbound rule policy (default-deny)||
 ||Graylog log forwarding||
 ||IDS/IPS package (stretch)||
 
 ## Troubleshooting
+
+### "No route to host" during rule verification
+
+**Date:** 2026-07-12
+**Phase:** Rule verification
+
+**Symptom:**
+SSH from Kali to theone (192.168.56.102) returned "No route to host" immediately, even with a correctly configured allow rule.
+
+**Cause:**
+theone VM was powered off. Instant "No route to host" (rather than a hanging timeout) was the signal that this was a routing/reachability issue, not a firewall block — pfSense's silent deny behaves differently (no response, not an active error).
+
+**Fix:**
+Powered on theone, retested.
+
+**Verification:**
+SSH succeeded on retest.
 
 Real errors hit during this build, in the order encountered. See `docs/troubleshooting.md` for full detail (symptom, cause, fix, and how it was verified).
 
@@ -54,12 +73,12 @@ Six issues encountered and resolved during the pfSense install and configuration
 
 ## Security+ concepts demonstrated
 
-* Network segmentation / zoning
-* Default-deny (implicit deny) rule design
-* NAT vs routed interfaces
-* Defense in depth (firewall + SIEM + monitoring working together)
-* (Stretch) IDS/IPS signature-based detection
-
+- Network segmentation / zoning
+- Default-deny (implicit deny) rule design — verified experimentally, not just configured
+- Principle of least privilege — single explicit allow rule (SSH only) rather than broad permissions
+- NAT vs routed interfaces
+- Defense in depth (firewall + SIEM + monitoring working together)
+- (Stretch) IDS/IPS signature-based detection
 ## Related lab projects
 
 * [LibreNMS Network Monitoring Lab](#) — link once published
