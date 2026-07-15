@@ -34,14 +34,16 @@ Monitoring (LibreNMS) tells you what's happening on the network. A SIEM (Graylog
 
 |Date|Phase|Notes|
 |-|-|-|
-| 2026-07-12 | Firewall rule policy (default-deny) | Added explicit allow rule: Kali (192.168.56.103) -> theone (192.168.56.102) TCP/22 only. Disabled default "allow LAN to any" rules (IPv4 + IPv6), relying on pfSense's implicit deny for everything else. |
-| 2026-07-12 | Rule verification | Confirmed SSH from Kali to theone succeeds (explicit allow). Confirmed ping from Kali to theone fails, and Kali loses all internet access (implicit deny catching everything not explicitly permitted). Verified via firewall logs showing "Default deny rule" entries. |
-|2026-07-10|VM creation + pfSense install|Created pfsense-fw VM (2GB RAM, 2 CPU). Hit and resolved several install-time errors (see troubleshooting.md).|
-|2026-07-10|Interface assignment (WAN/LAN)|WAN=em0 (DHCP via VirtualBox NAT), LAN=em1 (static).|
-|2026-07-10|LAN static IP + DHCP server|LAN set to 192.168.56.2/24 after resolving IP conflict with host. DHCP range 192.168.56.100-199.|
-|2026-07-10|GUI access + admin password reset|Confirmed HTTPS web GUI access, changed default admin password.|
-|2026-07-10|End-to-end connectivity test|theone (192.168.56.102) routed through pfSense to 8.8.8.8 and google.com, 0% packet loss, DNS resolving correctly.|
-|2026-07-10|Kali connectivity verification|Confirmed Kali (192.168.56.x) routes through pfSense: gateway ping 0% loss, 8.8.8.8 0% loss, DNS resolution via google.com confirmed.|
+| 2026-07-14/15 | Disaster recovery | pfSense VM disk corrupted after improper shutdown (closed window mid-boot instead of clean halt). Rebuilt entirely from ISO using existing documentation as the guide - rebuild completed in under an hour versus the original multi-hour build. |
+| 2026-07-15 | Post-rebuild verification | Recreated firewall rules (Kali -> theone SSH allow, default-allow disabled). Discovered Kali retained internet access due to a stray second NAT-attached adapter on the Kali VM bypassing pfSense entirely - not a firewall rule failure. Fixed by disabling the adapter. Reverified: ping/DNS blocked, SSH still works. |
+| 2026-07-12 |Firewall rule policy (default-deny)|Added explicit allow rule: Kali (192.168.56.103) -> theone (192.168.56.102) TCP/22 only. Disabled default "allow LAN to any" rules (IPv4 + IPv6), relying on pfSense's implicit deny for everything else.|
+| 2026-07-12 |Rule verification|Confirmed SSH from Kali to theone succeeds (explicit allow). Confirmed ping from Kali to theone fails, and Kali loses all internet access (implicit deny catching everything not explicitly permitted). Verified via firewall logs showing "Default deny rule" entries.|
+| 2026-07-10 |VM creation + pfSense install|Created pfsense-fw VM (2GB RAM, 2 CPU). Hit and resolved several install-time errors (see troubleshooting.md).|
+| 2026-07-10 |Interface assignment (WAN/LAN)|WAN=em0 (DHCP via VirtualBox NAT), LAN=em1 (static).|
+| 2026-07-10 |LAN static IP + DHCP server|LAN set to 192.168.56.2/24 after resolving IP conflict with host. DHCP range 192.168.56.100-199.|
+| 2026-07-10 |GUI access + admin password reset|Confirmed HTTPS web GUI access, changed default admin password.|
+| 2026-07-10 |End-to-end connectivity test|theone (192.168.56.102) routed through pfSense to 8.8.8.8 and google.com, 0% packet loss, DNS resolving correctly.|
+| 2026-07-10 |Kali connectivity verification|Confirmed Kali (192.168.56.x) routes through pfSense: gateway ping 0% loss, 8.8.8.8 0% loss, DNS resolution via google.com confirmed.|
 ||Inbound rule policy (default-deny)||
 ||Graylog log forwarding||
 ||IDS/IPS package (stretch)||
@@ -49,22 +51,22 @@ Monitoring (LibreNMS) tells you what's happening on the network. A SIEM (Graylog
 ## Proof of Segmentation
 
 **pfSense web GUI, logged in and configured:**
-![pfSense Dashboard](screenshots/pfSense_Dashboard.png)
+!\[pfSense Dashboard](screenshots/pfSense\_Dashboard.png)
 
 **Terminal and web GUI shown side-by-side, confirming the LAN IP conflict fix and successful login:**
-![Terminal and pfSense login side-by-side](screenshots/pfSense_login.png)
+!\[Terminal and pfSense login side-by-side](screenshots/pfSense\_login.png)
 
 **Kali restricted to SSH-only access — ping and internet access blocked, only theone SSH allowed:**
-![Kali ping blocked, SSH-only access verified](screenshots/pfSense_Kali_ping.png)
+!\[Kali ping blocked, SSH-only access verified](screenshots/pfSense\_Kali\_ping.png)
 
 **LAN interface configuration in the pfSense console:**
-![LAN configuration in pfSense terminal](screenshots/pfSense_LAN_config.png)
+!\[LAN configuration in pfSense terminal](screenshots/pfSense\_LAN\_config.png)
 
 **Diagnosing and resolving an IP conflict between pfSense LAN and the host machine:**
-![IP conflict diagnosis](screenshots/pfSense_IP_conflict.png)
+!\[IP conflict diagnosis](screenshots/pfSense\_IP\_conflict.png)
 
 **Early troubleshooting — CPU long mode error during initial VM setup:**
-![CPU long mode error](screenshots/pfSense_longmode_error.png)
+!\[CPU long mode error](screenshots/pfSense\_longmode\_error.png)
 
 ## Troubleshooting
 
@@ -93,12 +95,13 @@ Six issues encountered and resolved during the pfSense install and configuration
 
 ## Security+ concepts demonstrated
 
-- Network segmentation / zoning
-- Default-deny (implicit deny) rule design — verified experimentally, not just configured
-- Principle of least privilege — single explicit allow rule (SSH only) rather than broad permissions
-- NAT vs routed interfaces
-- Defense in depth (firewall + SIEM + monitoring working together)
-- (Stretch) IDS/IPS signature-based detection
+* Network segmentation / zoning
+* Default-deny (implicit deny) rule design — verified experimentally, not just configured
+* Principle of least privilege — single explicit allow rule (SSH only) rather than broad permissions
+* NAT vs routed interfaces
+* Defense in depth (firewall + SIEM + monitoring working together)
+* (Stretch) IDS/IPS signature-based detection
+
 ## Related lab projects
 
 * [LibreNMS Network Monitoring Lab](#) — link once published
