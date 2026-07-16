@@ -14,7 +14,7 @@ Monitoring (LibreNMS) tells you what's happening on the network. A SIEM (Graylog
 * \[x] Segment existing lab VMs behind the LAN interface
 * \[x] Implement default-deny inbound rules; allow only explicitly needed services
 * \[ ] Narrow graylog01's firewall rule from temporary "Any" to least-privilege (HTTP/HTTPS only)
-  *(blocked: Graylog install paused after a host hardware failure — see graylog-siem-lab repo for details)*
+*(blocked: Graylog install paused after a host hardware failure — see graylog-siem-lab repo for details)*
 * \[ ] Forward pfSense logs to Graylog (`graylog01`)
 * \[ ] (Stretch) Add Suricata/Snort for IDS/IPS on the WAN interface
 * \[ ] Diagram the full lab architecture with pfSense as the segmentation point
@@ -36,7 +36,7 @@ Monitoring (LibreNMS) tells you what's happening on the network. A SIEM (Graylog
 
 |Date|Phase|Notes|
 |-|-|-|
-|2026-07-15|Note|graylog01's temporary "Any" rule remains unhardened pending completion of the Graylog install (paused due to a host hardware failure — see graylog-siem-lab repo). |
+|2026-07-15|Note|graylog01's temporary "Any" rule remains unhardened pending completion of the Graylog install (paused due to a host hardware failure — see graylog-siem-lab repo).|
 |2026-07-14/15|Disaster recovery|pfSense VM disk corrupted after improper shutdown (closed window mid-boot instead of clean halt). Rebuilt entirely from ISO using existing documentation as the guide - rebuild completed in under an hour versus the original multi-hour build.|
 |2026-07-15|Post-rebuild verification|Recreated firewall rules (Kali -> theone SSH allow, default-allow disabled). Discovered Kali retained internet access due to a stray second NAT-attached adapter on the Kali VM bypassing pfSense entirely - not a firewall rule failure. Fixed by disabling the adapter. Reverified: ping/DNS blocked, SSH still works.|
 |2026-07-12|Firewall rule policy (default-deny)|Added explicit allow rule: Kali (192.168.56.103) -> theone (192.168.56.102) TCP/22 only. Disabled default "allow LAN to any" rules (IPv4 + IPv6), relying on pfSense's implicit deny for everything else.|
@@ -54,22 +54,22 @@ Monitoring (LibreNMS) tells you what's happening on the network. A SIEM (Graylog
 ## Proof of Segmentation
 
 **pfSense web GUI, logged in and configured:**
-!\[pfSense Dashboard](screenshots/pfSense\_Dashboard.png)
+![pfSense Dashboard](screenshots/pfSense\_Dashboard.png)
 
 **Terminal and web GUI shown side-by-side, confirming the LAN IP conflict fix and successful login:**
-!\[Terminal and pfSense login side-by-side](screenshots/pfSense\_login.png)
+![Terminal and pfSense login side-by-side](screenshots/pfSense\_login.png)
 
 **Kali restricted to SSH-only access — ping and internet access blocked, only theone SSH allowed:**
-!\[Kali ping blocked, SSH-only access verified](screenshots/pfSense\_Kali\_ping.png)
+![Kali ping blocked, SSH-only access verified](screenshots/pfSense\_Kali\_ping.png)
 
 **LAN interface configuration in the pfSense console:**
-!\[LAN configuration in pfSense terminal](screenshots/pfSense\_LAN\_config.png)
+![LAN configuration in pfSense terminal](screenshots/pfSense\_LAN\_config.png)
 
 **Diagnosing and resolving an IP conflict between pfSense LAN and the host machine:**
-!\[IP conflict diagnosis](screenshots/pfSense\_IP\_conflict.png)
+![IP conflict diagnosis](screenshots/pfSense\_IP\_conflict.png)
 
 **Early troubleshooting — CPU long mode error during initial VM setup:**
-!\[CPU long mode error](screenshots/pfSense\_longmode\_error.png)
+![CPU long mode error](screenshots/pfSense\_longmode\_error.png)
 
 ## Troubleshooting
 
