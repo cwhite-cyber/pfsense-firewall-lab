@@ -30,20 +30,35 @@ Monitoring (LibreNMS) tells you what's happening on the network. A SIEM (Graylog
 |`graylog01` (Graylog SIEM)|Log aggregation target|LAN (host-only)|
 |Kali|Attack/test box|LAN (host-only), used to validate rules|
 
+## Current Status (as of 2026-07-15)
+
+**Working and confirmed:**
+- graylog01 VM built, networked, and reachable through pfSense
+- MongoDB 4.4 installed and running
+- OpenSearch 2.19.6 installed and running, responding to authenticated API calls
+
+**Interrupted / not yet confirmed:**
+- Graylog server package install was in progress when a host hardware failure (RAM) forced an emergency shutdown
+- `/etc/graylog/server/server.conf` has not been edited; `password_secret` and `root_password_sha2` not yet generated
+- Graylog web UI not yet accessed
+
+**Next session:** verify MongoDB/OpenSearch survived the crash, confirm whether graylog-server actually installed, then proceed with secrets generation and config.
+
 ## Build log
 
 |Date|Phase|Notes|
 |-|-|-|
-| 2026-07-14/15 | Disaster recovery | pfSense VM disk corrupted after improper shutdown (closed window mid-boot instead of clean halt). Rebuilt entirely from ISO using existing documentation as the guide - rebuild completed in under an hour versus the original multi-hour build. |
-| 2026-07-15 | Post-rebuild verification | Recreated firewall rules (Kali -> theone SSH allow, default-allow disabled). Discovered Kali retained internet access due to a stray second NAT-attached adapter on the Kali VM bypassing pfSense entirely - not a firewall rule failure. Fixed by disabling the adapter. Reverified: ping/DNS blocked, SSH still works. |
-| 2026-07-12 |Firewall rule policy (default-deny)|Added explicit allow rule: Kali (192.168.56.103) -> theone (192.168.56.102) TCP/22 only. Disabled default "allow LAN to any" rules (IPv4 + IPv6), relying on pfSense's implicit deny for everything else.|
-| 2026-07-12 |Rule verification|Confirmed SSH from Kali to theone succeeds (explicit allow). Confirmed ping from Kali to theone fails, and Kali loses all internet access (implicit deny catching everything not explicitly permitted). Verified via firewall logs showing "Default deny rule" entries.|
-| 2026-07-10 |VM creation + pfSense install|Created pfsense-fw VM (2GB RAM, 2 CPU). Hit and resolved several install-time errors (see troubleshooting.md).|
-| 2026-07-10 |Interface assignment (WAN/LAN)|WAN=em0 (DHCP via VirtualBox NAT), LAN=em1 (static).|
-| 2026-07-10 |LAN static IP + DHCP server|LAN set to 192.168.56.2/24 after resolving IP conflict with host. DHCP range 192.168.56.100-199.|
-| 2026-07-10 |GUI access + admin password reset|Confirmed HTTPS web GUI access, changed default admin password.|
-| 2026-07-10 |End-to-end connectivity test|theone (192.168.56.102) routed through pfSense to 8.8.8.8 and google.com, 0% packet loss, DNS resolving correctly.|
-| 2026-07-10 |Kali connectivity verification|Confirmed Kali (192.168.56.x) routes through pfSense: gateway ping 0% loss, 8.8.8.8 0% loss, DNS resolution via google.com confirmed.|
+|2026-07-15|Hardware failure |Host machine experienced a RAM failure requiring emergency removal, interrupting the Graylog server install mid-process. No data loss on graylog01 (MongoDB and OpenSearch confirmed running pre-crash). Prompted evaluation of cloud-based alternatives to reduce dependency on local hardware for future lab work.|
+|2026-07-14/15|Disaster recovery|pfSense VM disk corrupted after improper shutdown (closed window mid-boot instead of clean halt). Rebuilt entirely from ISO using existing documentation as the guide - rebuild completed in under an hour versus the original multi-hour build.|
+|2026-07-15|Post-rebuild verification|Recreated firewall rules (Kali -> theone SSH allow, default-allow disabled). Discovered Kali retained internet access due to a stray second NAT-attached adapter on the Kali VM bypassing pfSense entirely - not a firewall rule failure. Fixed by disabling the adapter. Reverified: ping/DNS blocked, SSH still works.|
+|2026-07-12|Firewall rule policy (default-deny)|Added explicit allow rule: Kali (192.168.56.103) -> theone (192.168.56.102) TCP/22 only. Disabled default "allow LAN to any" rules (IPv4 + IPv6), relying on pfSense's implicit deny for everything else.|
+|2026-07-12|Rule verification|Confirmed SSH from Kali to theone succeeds (explicit allow). Confirmed ping from Kali to theone fails, and Kali loses all internet access (implicit deny catching everything not explicitly permitted). Verified via firewall logs showing "Default deny rule" entries.|
+|2026-07-10|VM creation + pfSense install|Created pfsense-fw VM (2GB RAM, 2 CPU). Hit and resolved several install-time errors (see troubleshooting.md).|
+|2026-07-10|Interface assignment (WAN/LAN)|WAN=em0 (DHCP via VirtualBox NAT), LAN=em1 (static).|
+|2026-07-10|LAN static IP + DHCP server|LAN set to 192.168.56.2/24 after resolving IP conflict with host. DHCP range 192.168.56.100-199.|
+|2026-07-10|GUI access + admin password reset|Confirmed HTTPS web GUI access, changed default admin password.|
+|2026-07-10|End-to-end connectivity test|theone (192.168.56.102) routed through pfSense to 8.8.8.8 and google.com, 0% packet loss, DNS resolving correctly.|
+|2026-07-10|Kali connectivity verification|Confirmed Kali (192.168.56.x) routes through pfSense: gateway ping 0% loss, 8.8.8.8 0% loss, DNS resolution via google.com confirmed.|
 ||Inbound rule policy (default-deny)||
 ||Graylog log forwarding||
 ||IDS/IPS package (stretch)||
