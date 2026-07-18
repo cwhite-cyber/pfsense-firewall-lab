@@ -21,7 +21,8 @@ Monitoring (LibreNMS) tells you what's happening on the network. A SIEM (Graylog
 
 ## Lab architecture
 
-*(Diagram goes here once the topology is finalized — see `docs/architecture.md`)*
+![Network Diagram](screenshots/pfSense-diagram.drawio.png)
+
 
 **Planned topology:**
 
