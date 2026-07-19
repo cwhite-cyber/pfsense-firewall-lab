@@ -20,7 +20,7 @@ Monitoring (LibreNMS) tells you what's happening on the network. A SIEM (Graylog
 * \[ ] Diagram the full lab architecture with pfSense as the segmentation point
 
 ## Lab architecture
-!\[Network Diagram](screenshots/pfSense-Diagram1.drawio.png)
+![Network Diagram](screenshots/pfSense-Diagram1.drawio.png)
 
 **Planned topology:**
 
@@ -52,27 +52,27 @@ Monitoring (LibreNMS) tells you what's happening on the network. A SIEM (Graylog
 
 ## 
 
-!\[Network Diagram](screenshots/pfSense-diagram.drawio.png)
+![Network Diagram](screenshots/pfSense-diagram.drawio.png)
 
 ## Proof of Segmentation
 
 **pfSense web GUI, logged in and configured:**
-!\[pfSense Dashboard](screenshots/pfSense\_Dashboard.png)
+![pfSense Dashboard](screenshots/pfSense\_Dashboard.png)
 
 **Terminal and web GUI shown side-by-side, confirming the LAN IP conflict fix and successful login:**
-!\[Terminal and pfSense login side-by-side](screenshots/pfSense\_login.png)
+![Terminal and pfSense login side-by-side](screenshots/pfSense\_login.png)
 
 **Kali restricted to SSH-only access — ping and internet access blocked, only theone SSH allowed:**
-!\[Kali ping blocked, SSH-only access verified](screenshots/pfSense\_Kali\_ping.png)
+![Kali ping blocked, SSH-only access verified](screenshots/pfSense\_Kali\_ping.png)
 
 **LAN interface configuration in the pfSense console:**
-!\[LAN configuration in pfSense terminal](screenshots/pfSense\_LAN\_config.png)
+![LAN configuration in pfSense terminal](screenshots/pfSense\_LAN\_config.png)
 
 **Diagnosing and resolving an IP conflict between pfSense LAN and the host machine:**
-!\[IP conflict diagnosis](screenshots/pfSense\_IP\_conflict.png)
+![IP conflict diagnosis](screenshots/pfSense\_IP\_conflict.png)
 
 **Early troubleshooting — CPU long mode error during initial VM setup:**
-!\[CPU long mode error](screenshots/pfSense\_longmode\_error.png)
+![CPU long mode error](screenshots/pfSense\_longmode\_error.png)
 
 ## Troubleshooting
 
