@@ -23,8 +23,9 @@ Monitoring (LibreNMS) tells you what's happening on the network. A SIEM (Graylog
 
 <<<<<<< HEAD
 *(Diagram goes here once the topology is finalized — see `docs/architecture.md`)*
-=======
-![Network Diagram](screenshots/pfSense-Diagram1.drawio.png)
+===
+
+!\[Network Diagram](screenshots/pfSense-Diagram1.drawio.png)
 
 >>>>>>> ab474c5062ecaaba1dadafb55dc3b3f019926bf9
 
@@ -116,8 +117,8 @@ Six issues encountered and resolved during the pfSense install and configuration
 
 ## Related lab projects
 
-* [LibreNMS Network Monitoring Lab](#) — https://github.com/cwhite-cyber/librenms-home-lab.git
-* [Graylog SIEM Build](#) — https://github.com/cwhite-cyber/graylog-siem-lab.git
+* [LibreNMS Network Monitoring Lab](https://github.com/cwhite-cyber/librenms-home-lab.git)
+* [Graylog SIEM Build](https://github.com/cwhite-cyber/graylog-siem-lab.git)
 
 ## Disclosure
 
