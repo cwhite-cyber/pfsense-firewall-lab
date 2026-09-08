@@ -19,6 +19,13 @@ Monitoring (LibreNMS) tells you what's happening on the network. A SIEM (Graylog
 - [ ] Forward pfSense logs to Graylog (`graylog01`)
 - [ ] (Stretch) Add Suricata/Snort for IDS/IPS on the WAN interface
 
+## Hardware Migration (2026-08 / 09)
+
+The lab moved off the ThinkPad T490 onto a new dedicated desktop (AMD Ryzen 9 5900X, 64GB RAM). The ThinkPad has been repurposed as a physically separate external attack machine (used for school/HTB work), rather than living inside this same VirtualBox host - a real hardware boundary between "trusted lab" and "attacker" hardware, not just a logical one.
+
+pfSense was rebuilt from scratch on the new machine. Kali and LibreNMS (the theone replacement) were already running on the new host with valid IPs before pfSense was rebuilt - note LibreNMS now sits at 192.168.56.101, not the old .102.
+
+
 ## Lab architecture
 
 ![Network Diagram](screenshots/pfSense-Diagram1.drawio.png)
@@ -47,6 +54,9 @@ Monitoring (LibreNMS) tells you what's happening on the network. A SIEM (Graylog
 | 2026-07-14/15 | Disaster recovery | pfSense VM disk corrupted after improper shutdown (closed window mid-boot instead of clean halt). Rebuilt entirely from ISO using existing documentation as the guide - rebuild completed in under an hour versus the original multi-hour build. |
 | 2026-07-15 | Post-rebuild verification | Recreated firewall rules (Kali -> theone SSH allow, default-allow disabled). Discovered Kali retained internet access due to a stray second NAT-attached adapter on the Kali VM bypassing pfSense entirely - not a firewall rule failure. Fixed by disabling the adapter. Reverified: ping/DNS blocked, SSH still works. |
 | 2026-07-15 | Note | graylog01's temporary "Any" rule remains unhardened pending completion of the Graylog install (paused due to a host hardware failure - see graylog-siem-lab repo). |
+| 2026-09-08 | Hardware migration + pfSense rebuild | Migrated lab to new desktop hardware; ThinkPad repurposed as a separate external attack machine. Rebuilt pfSense from ISO on new host, applying all known fixes upfront (FreeBSD 64-bit OS type, I/O APIC enabled, VMSVGA, Intel PRO/1000 MT Desktop NICs on both adapters) - install completed with zero errors this time. |
+| 2026-09-08 | Interface + rule rebuild | Reassigned WAN=em0, LAN=em1. First LAN IP attempt used the wrong field ordering but resolved correctly once carried through - reran to confirm the final address was 192.168.56.2/24, not the DHCP range start. Recreated the Kali -> LibreNMS SSH-only rule; initially created it on the WAN tab by mistake instead of LAN, caught before applying and corrected. Disabled both default allow-LAN-to-any rules. |
+| 2026-09-08 | Rule verification | Confirmed SSH from Kali to LibreNMS (192.168.56.101) succeeds. Ping and internet access from Kali correctly blocked - once Kali's leftover second NAT adapter (same recurring issue from the original build) was disabled again. Also corrected pfSense's timezone, which had defaulted away from Mountain Time and was showing incorrect timestamps in the firewall log. |
 | | Graylog log forwarding | |
 | | IDS/IPS package (stretch) | |
 

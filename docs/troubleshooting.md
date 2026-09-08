@@ -158,6 +158,43 @@ Reassigned pfSense LAN interface to 192.168.56.2/24 via the console (option 2, S
 **Verification:**
 https://192.168.56.2 loaded the pfSense login page successfully.
 
+### Kali's second NAT adapter re-bypassing pfSense (recurrence)
+
+**Date:** 2026-09-08
+**Phase:** Post-rebuild rule verification, new hardware
+
+**Symptom:**
+After rebuilding the firewall rules on the new host, Kali could still reach the internet and ping LibreNMS despite a correctly configured SSH-only allow rule and disabled default-allow rules.
+
+**Cause:**
+Same root cause as the original build: Kali's VM had a second network adapter enabled and attached to NAT, bypassing pfSense's LAN interface entirely. This is now a known recurring pattern, not a one-off - worth checking Kali's adapter configuration first whenever firewall rules appear not to be working, before troubleshooting the rules themselves.
+
+**Fix:**
+Disabled Kali's second (NAT) adapter, confirmed via `ip a` that only one interface was present.
+
+**Verification:**
+Ping and internet access from Kali failed as expected; SSH to LibreNMS still succeeded.
+
+---
+
+### pfSense firewall log timestamps incorrect after fresh install
+
+**Date:** 2026-09-08
+**Phase:** Rule verification
+
+**Symptom:**
+Firewall log entries showed timestamps that didn't match actual local time.
+
+**Cause:**
+The fresh pfSense install's timezone setting had not been set to the correct region (Mountain Time) during the setup wizard.
+
+**Fix:**
+Updated the Timezone field under System -> General Setup.
+
+**Verification:**
+Firewall log timestamps matched actual current local time after the change.
+
+---
 
 
 <!-- Add entries above this line as you hit real issues during the build -->
